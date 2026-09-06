@@ -1,16 +1,14 @@
-V8 FONT HARD FIX
+V9 FONT FIX
 
-อัปโหลดไฟล์ 3 ไฟล์นี้ไปที่ root ของ GitHub repository:
-- index.html (ทับของเดิม)
-- sw.js (ทับของเดิม)
-- font-test.html (ไฟล์ตรวจสอบ)
+อัปโหลด 3 ไฟล์นี้ทับที่ root ของ GitHub repository:
+- index.html
+- font-test.html
+- sw.js
 
-ไฟล์ฟอนต์ที่อยู่ใน assets/fonts/ ใช้ของเดิม:
-- FCVision-Bold.otf
-- THSarabunPSK.ttf
-- PlusJakartaSans-Regular.ttf
+V9 เปลี่ยน:
+- TH SarabunPSK โหลดอัตโนมัติจาก SarabunConsortium บน GitHub
+- Plus Jakarta Sans โหลดอัตโนมัติจาก official PlusJakartaSans repository
+- FC Vision ยังใช้ assets/fonts/FCVision-Bold.otf ใน repository ของคุณ
+- Service Worker จะ cache TH SarabunPSK และ Plus Jakarta Sans หลังโหลดสำเร็จ เพื่อช่วยการใช้งาน offline ครั้งถัดไป
 
-หลัง Deploy:
-1) เปิดหน้าเว็บหลัก จะมีแถบสถานะบอกว่าฟอนต์โหลดครบหรือไม่
-2) เปิด /font-test.html เพื่อทดสอบฟอนต์โดยตรง
-3) ถ้ายังเห็น ✕ ให้ส่ง URL หน้า font-test.html มาให้ตรวจต่อ
+หลัง GitHub Pages Deploy ให้เปิด /font-test.html แล้วกด Ctrl+Shift+R

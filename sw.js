@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tigersoft-handover-v8';
+const CACHE_NAME = 'tigersoft-handover-v9';
 const CORE = [
   './',
   './index.html',
@@ -7,11 +7,24 @@ const CORE = [
   './assets/images/tigersoft-symbol.png',
   './assets/images/tigersoft-wordmark.png',
   './assets/images/icon-192.png',
-  './assets/images/icon-512.png'
+  './assets/images/icon-512.png',
+  './assets/fonts/FCVision-Bold.otf?v=9'
+];
+
+const REMOTE_FONTS = [
+  'https://raw.githubusercontent.com/SarabunConsortium/TH-Sarabun-PSK/master/THSarabunPSK%20Regular.ttf',
+  'https://raw.githubusercontent.com/tokotype/PlusJakartaSans/master/fonts/ttf/PlusJakartaSans-Regular.ttf'
 ];
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(CORE)));
+  event.waitUntil((async()=>{
+    const cache = await caches.open(CACHE_NAME);
+    await cache.addAll(CORE);
+    await Promise.allSettled(REMOTE_FONTS.map(async url => {
+      const res = await fetch(url, {mode:'cors', cache:'no-store'});
+      if (res && res.ok) await cache.put(url, res.clone());
+    }));
+  })());
   self.skipWaiting();
 });
 
@@ -23,6 +36,17 @@ self.addEventListener('activate', event => {
   );
   self.clients.claim();
 });
+
+async function cacheFirst(request) {
+  const cached = await caches.match(request, {ignoreSearch:false});
+  if (cached) return cached;
+  const res = await fetch(request);
+  if (res && (res.ok || res.type === 'opaque')) {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.put(request, res.clone());
+  }
+  return res;
+}
 
 async function networkFirst(request) {
   const cache = await caches.open(CACHE_NAME);
@@ -40,6 +64,12 @@ async function networkFirst(request) {
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
+
+  if (REMOTE_FONTS.includes(url.href)) {
+    event.respondWith(cacheFirst(event.request));
+    return;
+  }
+
   if (url.origin !== location.origin) return;
 
   const isFont = /\.(ttf|otf|woff2?)$/i.test(url.pathname);
