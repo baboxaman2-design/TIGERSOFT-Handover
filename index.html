@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>TIGERSOFT Handover Builder V8</title>
+<meta name="theme-color" content="#18365d" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="192x192" href="./assets/images/icon-192.png" />
+<link rel="apple-touch-icon" href="./assets/images/icon-192.png" />
+
+<style>
+
+  @font-face{
+    font-family:"TIGER_FCVISION";
+    src:url("./assets/fonts/FCVision-Bold.otf?v=8") format("opentype");
+    font-style:normal;font-weight:400 700;font-display:block;
+  }
+  @font-face{
+    font-family:"TIGER_SARABUN";
+    src:url("./assets/fonts/THSarabunPSK.ttf?v=8") format("truetype");
+    font-style:normal;font-weight:400 700;font-display:block;
+  }
+  @font-face{
+    font-family:"TIGER_JAKARTA";
+    src:url("./assets/fonts/PlusJakartaSans-Regular.ttf?v=8") format("truetype");
+    font-style:normal;font-weight:400 700;font-display:block;
+  }
+
+  :root{
+    --navy:#18365d;
+    --red:#c9101d;
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --text:#172033;
+    --muted:#6b7280;
+    --line:#dfe4ea;
+    --success:#16803c;
+    --warn:#a65b00;
+    --danger:#b42318;
+    --shadow:0 10px 25px rgba(25,42,70,.08);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:"TIGER_JAKARTA","Tahoma","Noto Sans Thai",Arial,sans-serif}
+  button,input,textarea,select{font:inherit}
+  button{cursor:pointer}
+  .app{min-height:100vh}
+  .topbar{
+    position:sticky;top:0;z-index:20;
+    background:linear-gradient(90deg,var(--navy),#254d7f);
+    color:#fff;padding:14px 16px;box-shadow:0 2px 12px rgba(0,0,0,.12)
+  }
+  .topbar-inner{max-width:1100px;margin:auto;display:flex;align-items:center;gap:12px}
+  .brand{font-weight:800;letter-spacing:.4px}
+  .brand small{display:block;font-weight:400;opacity:.82;font-size:11px}
+  .top-actions{margin-left:auto;display:flex;gap:8px}
+  .btn{
+    border:none;border-radius:12px;padding:11px 14px;font-weight:700;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px
+  }
+  .btn-primary{background:var(--navy);color:#fff}
+  .btn-accent{background:var(--red);color:#fff}
+  .btn-light{background:#fff;color:var(--navy)}
+  .btn-ghost{background:#eef2f7;color:var(--text)}
+  .btn-danger{background:#fff0f0;color:var(--danger)}
+  .btn-success{background:#eaf8ee;color:var(--success)}
+  .btn-sm{padding:8px 10px;border-radius:10px;font-size:13px}
+  .container{max-width:1100px;margin:0 auto;padding:18px 14px 90px}
+  .hero{
+    background:linear-gradient(135deg,#fff,#f7f9fc);padding:20px;border-radius:20px;
+    border:1px solid var(--line);box-shadow:var(--shadow);margin-bottom:16px
+  }
+  .hero h1{font-size:23px;margin:0 0 6px}
+  .hero p{margin:0;color:var(--muted);line-height:1.55}
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+  .card{
+    grid-column:span 12;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:16px
+  }
+  .card h2,.card h3{margin:0 0 12px}
+  .card h2{font-size:18px}
+  .card h3{font-size:16px}
+  .field{margin-bottom:13px}
+  .label{display:block;font-weight:700;font-size:13px;margin-bottom:6px}
+  .input,.textarea,.select{
+    width:100%;border:1px solid #ccd3dc;border-radius:12px;padding:12px 13px;background:#fff;
+    color:var(--text);outline:none
+  }
+  .input:focus,.textarea:focus,.select:focus{border-color:#6d8db2;box-shadow:0 0 0 3px rgba(48,92,145,.10)}
+  .textarea{min-height:110px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr;gap:12px}
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .status{font-size:12px;border-radius:999px;padding:5px 10px;font-weight:800}
+  .status-draft{background:#fff4e8;color:var(--warn)}
+  .status-done{background:#e9f7ed;color:var(--success)}
+  .muted{color:var(--muted)}
+  .doc-card{
+    display:flex;gap:12px;align-items:flex-start;padding:14px;border:1px solid var(--line);
+    border-radius:14px;background:#fff;margin-bottom:10px
+  }
+  .doc-icon{
+    width:44px;height:44px;border-radius:12px;background:#e9eef5;color:var(--navy);
+    display:flex;align-items:center;justify-content:center;font-weight:900
+  }
+  .doc-main{flex:1;min-width:0}
+  .doc-title{font-weight:800;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .doc-sub{font-size:13px;color:var(--muted);line-height:1.45}
+  .section-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .section-no{
+    width:36px;height:36px;border-radius:10px;background:#111;color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:800
+  }
+  .location-card{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;background:#fcfdff}
+  .photo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .photo-card{border:1px solid var(--line);border-radius:12px;padding:8px;background:#fff}
+  .photo-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:9px;background:#edf1f6}
+  .photo-card input{margin-top:7px}
+  .equipment-item{border-top:1px dashed var(--line);padding:12px 0}
+  .equipment-item:first-child{border-top:none}
+  .empty{
+    padding:22px;text-align:center;border:1px dashed #ccd3dc;border-radius:14px;color:var(--muted)
+  }
+  .sticky-bottom{
+    position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);padding:10px 14px;z-index:25
+  }
+  .sticky-inner{max-width:1100px;margin:auto;display:flex;gap:8px}
+  .sticky-inner .btn{flex:1}
+  .hidden{display:none!important}
+  .pill-tabs{display:flex;gap:8px;overflow:auto;padding-bottom:4px}
+  .pill{
+    white-space:nowrap;border:none;background:#eef2f6;color:#4b5563;padding:8px 12px;border-radius:999px;font-weight:700
+  }
+  .pill.active{background:var(--navy);color:#fff}
+  .notice{padding:12px 14px;border-radius:12px;background:#eef6ff;color:#234d77;border:1px solid #cfe2f7;font-size:13px}
+  .sig-wrap{border:1px dashed #aeb7c3;border-radius:14px;background:#fff;padding:8px}
+  canvas.signature{width:100%;height:160px;display:block;background:#fff;border-radius:10px;touch-action:none}
+  .split{display:grid;grid-template-columns:1fr;gap:14px}
+  .a4-scroll{overflow:auto;padding:4px}
+  .a4{
+    width:210mm;height:297mm;min-height:297mm;max-height:297mm;
+    margin:0 auto 18px;background:#fff;color:#111;overflow:hidden;
+    box-shadow:0 8px 30px rgba(0,0,0,.12);position:relative;padding:70px 72px 55px;
+    font-family:"TIGER_SARABUN","Tahoma",sans-serif;
+    font-size:16pt;line-height:1.45;font-weight:400;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact
+  }
+  .a4 .brandline{position:absolute;left:0;right:0;top:0;height:40px;background:var(--navy)}
+  .a4 .brandline:after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:8px;background:var(--red)}
+  .a4.cover-page{padding:0;overflow:hidden;font-family:"TIGER_FCVISION","TIGER_SARABUN","Tahoma",sans-serif}
+  .a4 .cover-bottom-red{position:absolute;left:0;right:0;bottom:39px;height:10px;background:var(--red)}
+  .a4 .cover-bottom-navy{position:absolute;left:0;right:0;bottom:0;height:39px;background:var(--navy)}
+  .a4 .cover-logo{position:absolute;top:118px;left:0;right:0;margin:0;text-align:center}
+  .a4 .cover-logo .symbol{display:block;width:50px;height:auto;margin:0 auto 7px}
+  .a4 .cover-logo .wordmark{display:block;width:166px;height:auto;margin:0 auto}
+  .a4 .cover-title{position:absolute;top:274px;left:0;right:0;margin:0;text-align:center;font-family:"TIGER_FCVISION","TIGER_SARABUN","Tahoma",sans-serif;font-size:24pt;line-height:1;font-weight:700}
+  .a4 .cover-project{position:absolute;top:341px;left:38px;right:38px;margin:0;text-align:center;font-family:"TIGER_FCVISION","TIGER_SARABUN","Tahoma",sans-serif;font-size:18pt;line-height:1.35;font-weight:700}
+  .a4 .cover-present-label{position:absolute;top:518px;left:0;right:0;text-align:center;font-family:"TIGER_FCVISION","TIGER_SARABUN","Tahoma",sans-serif;font-size:24pt;line-height:1;font-weight:700}
+  .a4 .cover-customer{position:absolute;top:592px;left:30px;right:30px;text-align:center;font-family:"TIGER_FCVISION","TIGER_SARABUN","Tahoma",sans-serif;font-size:20pt;line-height:1.2;font-weight:400}
+  .a4 .cover-made-label{position:absolute;top:762px;left:0;right:0;text-align:center;font-family:"TIGER_FCVISION","TIGER_SARABUN","Tahoma",sans-serif;font-size:16pt;line-height:1;font-weight:700}
+  .a4 .cover-company{position:absolute;top:820px;left:30px;right:30px;text-align:center;font-family:"TIGER_FCVISION","TIGER_SARABUN","Tahoma",sans-serif;font-size:16pt;line-height:1.2;font-weight:700}
+  .a4 .cover-date{position:absolute;top:879px;left:0;right:0;text-align:center;font-family:"TIGER_FCVISION","TIGER_SARABUN","Tahoma",sans-serif;font-size:16pt;line-height:1.2;font-weight:400}
+  .a4 .center{text-align:center}
+  .a4 .footer{
+    position:absolute;left:48px;right:48px;bottom:22px;color:#c5c7ca;
+    font-family:"TIGER_SARABUN","Tahoma",sans-serif;
+    font-size:12pt;line-height:1;text-align:center
+  }
+  .a4 .page-head{
+    display:block;text-align:right;margin-top:-34px;margin-bottom:8px;
+    font-family:"TIGER_SARABUN","Tahoma",sans-serif;
+    font-size:20pt;line-height:1;font-weight:700;border-bottom:2px solid #111;padding-bottom:8px
+  }
+  .a4 .letter{
+    font-family:"TIGER_SARABUN","Tahoma",sans-serif;
+    font-size:16pt;line-height:1.48;margin-top:28px;font-weight:400
+  }
+  .a4 .letter-row{
+    display:grid;grid-template-columns:82px 1fr;gap:8px;margin:11px 0;
+    font-size:16pt;line-height:1.35
+  }
+  .a4 .letter-row b{font-weight:700}
+  .a4 .indent{
+    margin-top:34px;text-indent:48px;text-align:left;font-size:16pt;line-height:1.55
+  }
+  .a4 .sign-line{
+    margin-top:58px;width:300px;margin-left:auto;margin-right:4px;text-align:center;
+    font-family:"TIGER_SARABUN","Tahoma",sans-serif;font-size:16pt;line-height:1.25
+  }
+  .a4 .sign-line .sigbox{height:70px;display:flex;align-items:flex-end;justify-content:center;margin-top:18px;margin-bottom:2px}
+  .a4 .sign-line .sigbox img{max-height:64px;max-width:180px}
+  .a4 .sign-line .name-line{border-top:1px solid #111;margin:2px 22px 8px}
+  .a4 .sign-line .sign-name{font-size:16pt;text-decoration:none}
+  .a4 .sign-line .sign-role{margin-top:8px;font-size:16pt}
+  .a4 .loc-head{
+    display:flex;align-items:center;gap:22px;margin-top:12px;border-bottom:1px solid #9b9b9b;padding-bottom:10px;
+    font-family:"TIGER_SARABUN","Tahoma",sans-serif
+  }
+  .a4 .loc-num{
+    width:54px;height:54px;background:#050505;color:#fff;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    font-family:"TIGER_SARABUN","Tahoma",sans-serif;font-size:20pt;font-weight:400;line-height:1
+  }
+  .a4 .loc-title{
+    font-family:"TIGER_SARABUN","Tahoma",sans-serif;
+    font-size:20pt;line-height:1;font-weight:700
+  }
+  .a4 .a4-photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:40px}
+  .a4 .a4-photo{border:1px solid #d3d3d3;padding:9px;background:#fff;box-shadow:0 2px 7px rgba(0,0,0,.10)}
+  .a4 .a4-photo img{width:100%;height:310px;object-fit:cover;display:block}
+  .a4 .caption{
+    text-align:center;font-family:"TIGER_SARABUN","Tahoma",sans-serif;
+    font-size:14pt;line-height:1.15;margin-top:5px;color:#333
+  }
+  .a4 table{
+    border-collapse:collapse;width:100%;margin-top:31px;
+    font-family:"TIGER_SARABUN","Tahoma",sans-serif;
+    font-size:14pt;line-height:1.05
+  }
+  .a4 th,.a4 td{border:1px solid #444;padding:4px 7px;text-align:center;vertical-align:middle}
+  .a4 th{background:#050505;color:#fff;font-weight:400;font-size:14pt}
+  .a4 .accept-text{
+    font-family:"TIGER_SARABUN","Tahoma",sans-serif;
+    font-size:16pt;line-height:1.52;text-align:center;margin-top:72px
+  }
+  .a4 .sig-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:92px;margin-top:116px;text-align:center;
+    font-family:"TIGER_SARABUN","Tahoma",sans-serif;font-size:16pt;line-height:1.3
+  }
+  .a4 .sig-img{height:80px;display:flex;align-items:end;justify-content:center}
+  .a4 .sig-img img{max-height:72px;max-width:220px}
+  .a4 .line{border-top:1px solid #111;margin:6px 14px 7px}
+  .a4 .accept-title{
+    margin:0;text-align:center;text-decoration:underline;
+    font-family:"TIGER_SARABUN","Tahoma",sans-serif;
+    font-size:24pt;line-height:1;font-weight:700
+  }
+  .modal{
+    position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;z-index:50
+  }
+  .sheet{
+    width:100%;max-width:680px;background:#fff;border-radius:22px 22px 0 0;padding:18px 16px 24px;
+    max-height:88vh;overflow:auto
+  }
+  .sheet h3{margin-top:0}
+  .right{margin-left:auto}
+  .divider{height:1px;background:var(--line);margin:14px 0}
+  @media(min-width:760px){
+    .row.two{grid-template-columns:1fr 1fr}
+    .row.three{grid-template-columns:repeat(3,1fr)}
+    .split{grid-template-columns:1.05fr .95fr}
+    .card.half{grid-column:span 6}
+    .photo-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .sheet{border-radius:22px;margin-bottom:30px}
+    .modal{align-items:center}
+  }
+  @media(max-width:820px){
+    .a4{transform:scale(.42);transform-origin:top left;margin-bottom:-650px}
+    .a4-scroll{overflow:hidden}
+  }
+  @media print{
+    html,body{
+      width:210mm!important;
+      margin:0!important;padding:0!important;background:#fff!important;
+      -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important
+    }
+    body *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+    .topbar,.container > *:not(#previewPage),.sticky-bottom,.hero{display:none!important}
+    .container{max-width:none!important;margin:0!important;padding:0!important}
+    #previewPage{display:block!important;margin:0!important;padding:0!important}
+    #previewPages,.a4-scroll{
+      display:block!important;overflow:visible!important;margin:0!important;padding:0!important
+    }
+    .a4{
+      width:210mm!important;height:297mm!important;min-height:297mm!important;max-height:297mm!important;
+      box-sizing:border-box!important;overflow:hidden!important;
+      box-shadow:none!important;margin:0!important;padding-top:70px;
+      transform:none!important;break-after:page!important;page-break-after:always!important;
+      break-inside:avoid!important;page-break-inside:avoid!important
+    }
+    .a4.cover-page{padding:0!important}
+    .a4:last-child{break-after:auto!important;page-break-after:auto!important}
+    @page{size:A4 portrait;margin:0}
+  }
+
+  /* Force the exact bundled web fonts on the generated document */
+  .a4:not(.cover-page),
+  .a4:not(.cover-page) *{
+    font-family:"TIGER_SARABUN","Tahoma",sans-serif !important;
+  }
+  .a4.cover-page,
+  .a4.cover-page *{
+    font-family:"TIGER_FCVISION","TIGER_SARABUN","Tahoma",sans-serif !important;
+  }
+
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">TIGERSOFT <small>Handover Builder • Local Only</small></div>
+      <div class="top-actions">
+        <button class="btn btn-light btn-sm" onclick="goDashboard()">หน้าแรก</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="dashboardPage">
+      <div class="hero">
+        <div style="margin-bottom:12px"><img src="./assets/images/tigersoft-logo.png" alt="TIGERSOFT" style="max-width:260px;width:100%;height:auto"></div><h1>เอกสารส่งมอบงาน</h1>
+        <p>สร้างเอกสารหน้างานจากมือถือ ถ่ายรูป/นำเข้ารูป ลงลายมือชื่อ และบันทึกเป็น PDF โดยข้อมูลเอกสารเก็บไว้ในเครื่องที่ใช้งาน</p>
+        <div id="fontStatus" class="notice" style="margin-top:12px">
+          กำลังตรวจสอบฟอนต์ของระบบ...
+        </div>
+        <div class="toolbar" style="margin-top:14px">
+          <button class="btn btn-accent" onclick="newDocument()">＋ สร้างเอกสารใหม่</button>
+          <button class="btn btn-ghost" onclick="exportBackup()">ส่งออก Backup</button>
+          <label class="btn btn-ghost">นำเข้า Backup<input id="backupInput" type="file" accept=".json" hidden></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="toolbar">
+          <input id="searchInput" class="input" style="flex:1;min-width:220px" placeholder="ค้นหาชื่อลูกค้า / โครงการ / PO..." oninput="renderDashboard()">
+          <div class="pill-tabs">
+            <button class="pill active" data-filter="all" onclick="setFilter('all',this)">ทั้งหมด</button>
+            <button class="pill" data-filter="draft" onclick="setFilter('draft',this)">Draft</button>
+            <button class="pill" data-filter="completed" onclick="setFilter('completed',this)">Completed</button>
+          </div>
+        </div>
+        <div id="docList" style="margin-top:14px"></div>
+      </div>
+    </section>
+
+    <section id="editorPage" class="hidden">
+      <div class="hero">
+        <div class="toolbar">
+          <div>
+            <h1 id="editorTitle" style="margin-bottom:4px">สร้างเอกสารใหม่</h1>
+            <div class="muted" id="autosaveState">บันทึกอัตโนมัติ</div>
+          </div>
+          <span id="editorStatus" class="status status-draft right">Draft</span>
+        </div>
+      </div>
+
+      <div class="split">
+        <div>
+          <div class="card">
+            <div class="section-head"><div class="section-no">1</div><h2 style="margin:0">ข้อมูลโครงการ</h2></div>
+            <div class="field"><label class="label">ชื่อเอกสาร</label><input id="docTitle" class="input" value="เอกสารส่งมอบงาน"></div>
+            <div class="field"><label class="label">ชื่อโครงการ *</label><input id="projectName" class="input" placeholder="เช่น ติดตั้ง Swing Barrier SBTL700 Series"></div>
+            <div class="row two">
+              <div class="field"><label class="label">ลูกค้า *</label><input id="customerName" class="input"></div>
+              <div class="field"><label class="label">สาขา</label><input id="branchName" class="input"></div>
+            </div>
+            <div class="row two">
+              <div class="field"><label class="label">เลขที่เอกสารสั่งซื้อ</label><input id="poRef" class="input" placeholder="เช่น WR-S-2607118"></div>
+              <div class="field"><label class="label">วันที่เอกสาร</label><input id="docDate" type="date" class="input"></div>
+            </div>
+            <div class="row two">
+              <div class="field"><label class="label">วันที่เริ่มงาน</label><input id="startDate" type="date" class="input"></div>
+              <div class="field"><label class="label">วันที่เสร็จ</label><input id="endDate" type="date" class="input"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-head"><div class="section-no">2</div><h2 style="margin:0">รายละเอียดงาน</h2></div>
+            <div class="notice">สามารถแก้ข้อความได้อิสระ ระบบจะนำข้อความนี้ไปใช้ในหนังสือส่งมอบ</div>
+            <div class="field" style="margin-top:12px">
+              <textarea id="workDetail" class="textarea" placeholder="รายละเอียดงานติดตั้ง"></textarea>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="generateWorkDetail()">สร้างข้อความจากข้อมูลอัตโนมัติ</button>
+          </div>
+
+          <div class="card">
+            <div class="section-head"><div class="section-no">3</div><h2 style="margin:0">จุดติดตั้ง</h2></div>
+            <div id="locationList"></div>
+            <button class="btn btn-primary" onclick="openLocationSheet()">＋ เพิ่มจุดติดตั้ง</button>
+          </div>
+
+          <div class="card">
+            <div class="section-head"><div class="section-no">4</div><h2 style="margin:0">ผู้ส่งมอบ / ผู้รับมอบ</h2></div>
+            <div class="row two">
+              <div>
+                <h3>ผู้ส่งมอบงาน</h3>
+                <div class="field"><label class="label">ชื่อ</label><input id="senderName" class="input"></div>
+                <div class="field"><label class="label">ตำแหน่ง</label><input id="senderPosition" class="input" value="ช่างเทคนิค / ตัวแทนบริษัท"></div>
+                <div class="sig-wrap"><canvas id="senderSig" class="signature"></canvas></div>
+                <div class="toolbar" style="margin-top:8px"><button class="btn btn-ghost btn-sm" onclick="clearSignature('sender')">ล้างลายเซ็น</button></div>
+              </div>
+              <div>
+                <h3>ผู้รับมอบงาน</h3>
+                <div class="field"><label class="label">ชื่อ</label><input id="receiverName" class="input"></div>
+                <div class="field"><label class="label">ตำแหน่ง</label><input id="receiverPosition" class="input" value="ตัวแทนผู้มีอำนาจลงนาม"></div>
+                <div class="sig-wrap"><canvas id="receiverSig" class="signature"></canvas></div>
+                <div class="toolbar" style="margin-top:8px"><button class="btn btn-ghost btn-sm" onclick="clearSignature('receiver')">ล้างลายเซ็น</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="position:sticky;top:82px">
+            <h2>สรุปเอกสาร</h2>
+            <div id="docSummary" class="muted" style="line-height:1.8"></div>
+            <div class="divider"></div>
+            <div class="toolbar">
+              <button class="btn btn-primary" onclick="showPreview()">Preview A4</button>
+              <button class="btn btn-success" onclick="markCompleted()">ทำเครื่องหมาย Completed</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="previewPage" class="hidden">
+      <div class="hero">
+        <div class="toolbar">
+          <div>
+            <h1 style="margin-bottom:4px">Preview เอกสาร A4</h1>
+            <div class="muted">ตรวจสอบก่อนบันทึก PDF</div>
+          </div>
+          <div class="right toolbar">
+            <button class="btn btn-ghost" onclick="backToEditor()">แก้ไขเอกสาร</button>
+            <button class="btn btn-accent" onclick="printExactPreview()">บันทึก PDF / พิมพ์</button>
+          </div>
+        </div>
+      </div>
+      <div id="previewPages" class="a4-scroll"></div>
+    </section>
+  </main>
+
+  <div id="editorSticky" class="sticky-bottom hidden">
+    <div class="sticky-inner">
+      <button class="btn btn-ghost" onclick="goDashboard()">บันทึกและกลับ</button>
+      <button class="btn btn-primary" onclick="showPreview()">Preview A4</button>
+    </div>
+  </div>
+</div>
+
+<div id="locationModal" class="modal hidden">
+  <div class="sheet">
+    <div class="toolbar">
+      <h3 id="locSheetTitle">เพิ่มจุดติดตั้ง</h3>
+      <button class="btn btn-ghost btn-sm right" onclick="closeLocationSheet()">ปิด</button>
+    </div>
+    <div class="field"><label class="label">ชื่อพื้นที่</label><input id="locName" class="input" placeholder="เช่น บริเวณทางเข้าหน้าโรงงาน"></div>
+    <div class="field">
+      <label class="label">รูปภาพ</label>
+      <div class="toolbar">
+        <label class="btn btn-primary btn-sm">📷 ถ่ายรูป<input id="cameraInput" type="file" accept="image/*" capture="environment" hidden multiple></label>
+        <label class="btn btn-ghost btn-sm">🖼 เลือกรูป<input id="galleryInput" type="file" accept="image/*" hidden multiple></label>
+      </div>
+      <div id="modalPhotoGrid" class="photo-grid" style="margin-top:10px"></div>
+    </div>
+    <div class="divider"></div>
+    <h3>อุปกรณ์</h3>
+    <div id="modalEquipment"></div>
+    <button class="btn btn-ghost btn-sm" onclick="addEquipmentRow()">＋ เพิ่มอุปกรณ์</button>
+    <div class="divider"></div>
+    <button class="btn btn-accent" style="width:100%" onclick="saveLocationFromSheet()">บันทึกจุดติดตั้ง</button>
+  </div>
+</div>
+
+<script>
+const DB_NAME='tigersoft_handover_db_v1';
+const STORE='documents';
+let db=null, docs=[], current=null, currentFilter='all';
+let editLocationIndex=null;
+let modalPhotos=[];
+let modalEquipment=[];
+
+function uid(){return 'd_'+Date.now()+'_'+Math.random().toString(36).slice(2,8)}
+function todayISO(){return new Date().toISOString().slice(0,10)}
+function fmtDate(v){
+  if(!v)return '-';
+  const d=new Date(v+'T00:00:00');
+  return d.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
+}
+function fmtDateRangeThai(start,end){
+  if(!start && !end)return '-';
+  if(!start)return fmtDate(end);
+  if(!end)return fmtDate(start);
+  const a=new Date(start+'T00:00:00'), b=new Date(end+'T00:00:00');
+  const dayA=a.getDate(), dayB=b.getDate();
+  const monthA=a.toLocaleDateString('th-TH',{month:'long'});
+  const monthB=b.toLocaleDateString('th-TH',{month:'long'});
+  const yearA=a.getFullYear()+543, yearB=b.getFullYear()+543;
+  if(monthA===monthB && yearA===yearB){
+    return dayA===dayB ? `${dayA} ${monthA} ${yearA}` : `${dayA}-${dayB} ${monthA} ${yearA}`;
+  }
+  return `${dayA} ${monthA} ${yearA} - ${dayB} ${monthB} ${yearB}`;
+}
+function coverCustomer(){
+  if(!current)return '-';
+  const branch=(current.branchName||'').trim();
+  return `${current.customerName||'-'}${branch ? ' สาขาที่ '+branch : ''}`;
+}
+function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+function openDB(){
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open(DB_NAME,1);
+    req.onupgradeneeded=()=>{req.result.createObjectStore(STORE,{keyPath:'id'})}
+    req.onsuccess=()=>{db=req.result;resolve()}
+    req.onerror=()=>reject(req.error)
+  });
+}
+function dbGetAll(){
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction(STORE,'readonly'), req=tx.objectStore(STORE).getAll();
+    req.onsuccess=()=>resolve(req.result||[]); req.onerror=()=>reject(req.error)
+  })
+}
+function dbPut(doc){
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction(STORE,'readwrite'), req=tx.objectStore(STORE).put(doc);
+    req.onsuccess=()=>resolve(); req.onerror=()=>reject(req.error)
+  })
+}
+function dbDelete(id){
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction(STORE,'readwrite'), req=tx.objectStore(STORE).delete(id);
+    req.onsuccess=()=>resolve(); req.onerror=()=>reject(req.error)
+  })
+}
+
+
+
+async function init(){
+  await openDB();
+  docs=await dbGetAll();
+  document.getElementById('backupInput').addEventListener('change',importBackup);
+  document.getElementById('cameraInput').addEventListener('change',e=>handlePhotos(e.target.files));
+  document.getElementById('galleryInput').addEventListener('change',e=>handlePhotos(e.target.files));
+  bindAutosave();
+  setupSignature('senderSig','senderSignature');
+  setupSignature('receiverSig','receiverSignature');
+  renderDashboard();
+}
+function bindAutosave(){
+  ['docTitle','projectName','customerName','branchName','poRef','docDate','startDate','endDate','workDetail',
+   'senderName','senderPosition','receiverName','receiverPosition'].forEach(id=>{
+     document.getElementById(id).addEventListener('input',()=>{collectForm();scheduleSave();renderSummary()})
+     document.getElementById(id).addEventListener('change',()=>{collectForm();scheduleSave();renderSummary()})
+  });
+}
+let saveTimer=null;
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  const s=document.getElementById('autosaveState');
+  if(s)s.textContent='กำลังบันทึก...';
+  saveTimer=setTimeout(saveCurrent,450);
+}
+async function saveCurrent(){
+  if(!current)return;
+  current.updatedAt=Date.now();
+  await dbPut(current);
+  const idx=docs.findIndex(d=>d.id===current.id);
+  if(idx>=0)docs[idx]=structuredClone(current); else docs.unshift(structuredClone(current));
+  const s=document.getElementById('autosaveState');
+  if(s)s.textContent='บันทึกอัตโนมัติแล้ว ✓';
+}
+function setFilter(f,btn){
+  currentFilter=f;
+  document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active'); renderDashboard()
+}
+function renderDashboard(){
+  const q=(document.getElementById('searchInput').value||'').trim().toLowerCase();
+  const list=docs
+    .filter(d=>currentFilter==='all'||d.status===currentFilter)
+    .filter(d=>[d.projectName,d.customerName,d.poRef].join(' ').toLowerCase().includes(q))
+    .sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+  const el=document.getElementById('docList');
+  if(!list.length){el.innerHTML='<div class="empty">ยังไม่มีเอกสารในรายการ</div>';return}
+  el.innerHTML=list.map(d=>`
+    <div class="doc-card">
+      <div class="doc-icon">PDF</div>
+      <div class="doc-main">
+        <div class="doc-title">${esc(d.projectName||'ยังไม่ได้ตั้งชื่อโครงการ')}</div>
+        <div class="doc-sub">${esc(d.customerName||'-')}<br>${esc(d.poRef||'ไม่มีเลขอ้างอิง')} • ${fmtDate(d.docDate||d.endDate)}</div>
+        <div style="margin-top:8px"><span class="status ${d.status==='completed'?'status-done':'status-draft'}">${d.status==='completed'?'Completed':'Draft'}</span></div>
+      </div>
+      <div class="toolbar">
+        <button class="btn btn-ghost btn-sm" onclick="openDocument('${d.id}')">เปิด</button>
+        <button class="btn btn-danger btn-sm" onclick="removeDocument('${d.id}')">ลบ</button>
+      </div>
+    </div>`).join('');
+}
+async function removeDocument(id){
+  if(!confirm('ลบเอกสารนี้จากเครื่องหรือไม่?'))return;
+  await dbDelete(id); docs=docs.filter(d=>d.id!==id); renderDashboard()
+}
+function newDocument(){
+  current={
+    id:uid(),status:'draft',docTitle:'เอกสารส่งมอบงาน',projectName:'',customerName:'',branchName:'',
+    poRef:'',docDate:todayISO(),startDate:todayISO(),endDate:todayISO(),workDetail:'',
+    senderName:'',senderPosition:'ช่างเทคนิค / ตัวแทนบริษัท',
+    receiverName:'',receiverPosition:'ตัวแทนผู้มีอำนาจลงนาม',
+    senderSignature:'',receiverSignature:'',locations:[],createdAt:Date.now(),updatedAt:Date.now()
+  };
+  loadCurrentToForm(); showEditor()
+}
+function openDocument(id){
+  const d=docs.find(x=>x.id===id); if(!d)return;
+  current=structuredClone(d); loadCurrentToForm(); showEditor()
+}
+function loadCurrentToForm(){
+  const ids=['docTitle','projectName','customerName','branchName','poRef','docDate','startDate','endDate','workDetail',
+             'senderName','senderPosition','receiverName','receiverPosition'];
+  ids.forEach(id=>document.getElementById(id).value=current[id]||'');
+  redrawSignature('senderSig',current.senderSignature);
+  redrawSignature('receiverSig',current.receiverSignature);
+  renderLocations(); renderSummary();
+  document.getElementById('editorStatus').textContent=current.status==='completed'?'Completed':'Draft';
+  document.getElementById('editorStatus').className='status '+(current.status==='completed'?'status-done':'status-draft');
+  document.getElementById('editorTitle').textContent=current.projectName||'สร้างเอกสารใหม่';
+}
+function collectForm(){
+  if(!current)return;
+  ['docTitle','projectName','customerName','branchName','poRef','docDate','startDate','endDate','workDetail',
+   'senderName','senderPosition','receiverName','receiverPosition'].forEach(id=>current[id]=document.getElementById(id).value);
+  document.getElementById('editorTitle').textContent=current.projectName||'สร้างเอกสารใหม่';
+}
+function showEditor(){
+  document.getElementById('dashboardPage').classList.add('hidden');
+  document.getElementById('previewPage').classList.add('hidden');
+  document.getElementById('editorPage').classList.remove('hidden');
+  document.getElementById('editorSticky').classList.remove('hidden');
+  setTimeout(()=>{resizeSignatureCanvas('senderSig');resizeSignatureCanvas('receiverSig');redrawSignature('senderSig',current.senderSignature);redrawSignature('receiverSig',current.receiverSignature)},50);
+}
+async function goDashboard(){
+  collectForm(); await saveCurrent();
+  current=null;
+  document.getElementById('editorPage').classList.add('hidden');
+  document.getElementById('previewPage').classList.add('hidden');
+  document.getElementById('dashboardPage').classList.remove('hidden');
+  document.getElementById('editorSticky').classList.add('hidden');
+  docs=await dbGetAll(); renderDashboard()
+}
+function generateWorkDetail(){
+  collectForm();
+  const p=current.projectName||'งานตามที่ได้รับมอบหมาย';
+  current.workDetail=`ตามที่ท่านได้มอบหมายให้บริษัทฯ ดำเนินการ ${p} ทางบริษัทฯ ได้ดำเนินการติดตั้งและทดสอบระบบเรียบร้อยสมบูรณ์ตามขอบเขตงานที่กำหนด จึงมีความประสงค์ขอส่งมอบงานดังกล่าวให้กับทาง ${current.customerName||'ลูกค้า'}${current.branchName?' '+current.branchName:''} เพื่อโปรดพิจารณาตรวจสอบและลงนามรับมอบงาน`;
+  document.getElementById('workDetail').value=current.workDetail; scheduleSave()
+}
+
+function openLocationSheet(index=null){
+  editLocationIndex=index;
+  if(index===null){
+    modalPhotos=[]; modalEquipment=[]; document.getElementById('locName').value='';
+    document.getElementById('locSheetTitle').textContent='เพิ่มจุดติดตั้ง';
+  }else{
+    const l=current.locations[index];
+    document.getElementById('locName').value=l.name||'';
+    modalPhotos=structuredClone(l.photos||[]);
+    modalEquipment=structuredClone(l.equipment||[]);
+    document.getElementById('locSheetTitle').textContent='แก้ไขจุดติดตั้ง';
+  }
+  renderModalPhotos(); renderModalEquipment();
+  document.getElementById('locationModal').classList.remove('hidden')
+}
+function closeLocationSheet(){document.getElementById('locationModal').classList.add('hidden')}
+async function handlePhotos(files){
+  for(const file of files){
+    const data=await compressImage(file,1600,.82);
+    modalPhotos.push({id:uid(),data,caption:''})
+  }
+  renderModalPhotos();
+  document.getElementById('cameraInput').value='';
+  document.getElementById('galleryInput').value='';
+}
+function compressImage(file,maxEdge=1600,quality=.82){
+  return new Promise((resolve,reject)=>{
+    const r=new FileReader();
+    r.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        const scale=Math.min(1,maxEdge/Math.max(w,h)); w=Math.round(w*scale); h=Math.round(h*scale);
+        const c=document.createElement('canvas'); c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        resolve(c.toDataURL('image/jpeg',quality));
+      };
+      img.onerror=reject; img.src=r.result;
+    };
+    r.onerror=reject; r.readAsDataURL(file)
+  })
+}
+function renderModalPhotos(){
+  const el=document.getElementById('modalPhotoGrid');
+  el.innerHTML=modalPhotos.map((p,i)=>`
+    <div class="photo-card">
+      <img src="${p.data}">
+      <input class="input" placeholder="คำอธิบายรูป" value="${esc(p.caption||'')}" oninput="modalPhotos[${i}].caption=this.value">
+      <div class="toolbar" style="margin-top:7px">
+        <button class="btn btn-ghost btn-sm" onclick="movePhoto(${i},-1)">←</button>
+        <button class="btn btn-ghost btn-sm" onclick="movePhoto(${i},1)">→</button>
+        <button class="btn btn-danger btn-sm right" onclick="modalPhotos.splice(${i},1);renderModalPhotos()">ลบ</button>
+      </div>
+    </div>`).join('');
+}
+function movePhoto(i,dir){
+  const j=i+dir;if(j<0||j>=modalPhotos.length)return;
+  [modalPhotos[i],modalPhotos[j]]=[modalPhotos[j],modalPhotos[i]];renderModalPhotos()
+}
+function addEquipmentRow(){modalEquipment.push({name:'',qty:1,serial:'',remark:'ติดตั้งสมบูรณ์'});renderModalEquipment()}
+function renderModalEquipment(){
+  const el=document.getElementById('modalEquipment');
+  if(!modalEquipment.length){el.innerHTML='<div class="empty" style="margin-bottom:10px">ยังไม่มีอุปกรณ์</div>';return}
+  el.innerHTML=modalEquipment.map((e,i)=>`
+    <div class="equipment-item">
+      <div class="field"><label class="label">ชื่ออุปกรณ์</label><input class="input" value="${esc(e.name||'')}" oninput="modalEquipment[${i}].name=this.value"></div>
+      <div class="row three">
+        <div class="field"><label class="label">จำนวน</label><input type="number" min="1" class="input" value="${e.qty||1}" oninput="modalEquipment[${i}].qty=Number(this.value||1)"></div>
+        <div class="field"><label class="label">Serial Number</label><input class="input" value="${esc(e.serial||'')}" oninput="modalEquipment[${i}].serial=this.value"></div>
+        <div class="field"><label class="label">หมายเหตุ</label><input class="input" value="${esc(e.remark||'')}" oninput="modalEquipment[${i}].remark=this.value"></div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="modalEquipment.splice(${i},1);renderModalEquipment()">ลบอุปกรณ์</button>
+    </div>`).join('');
+}
+function saveLocationFromSheet(){
+  const name=document.getElementById('locName').value.trim()||'จุดติดตั้ง';
+  const loc={name,photos:structuredClone(modalPhotos),equipment:structuredClone(modalEquipment)};
+  if(editLocationIndex===null)current.locations.push(loc);else current.locations[editLocationIndex]=loc;
+  renderLocations(); renderSummary(); scheduleSave(); closeLocationSheet()
+}
+function renderLocations(){
+  const el=document.getElementById('locationList');
+  if(!current.locations.length){el.innerHTML='<div class="empty" style="margin-bottom:12px">ยังไม่มีจุดติดตั้ง</div>';return}
+  el.innerHTML=current.locations.map((l,i)=>`
+    <div class="location-card">
+      <div class="section-head">
+        <div class="section-no">${i+1}</div>
+        <div style="flex:1">
+          <div style="font-weight:800">${esc(l.name)}</div>
+          <div class="muted" style="font-size:13px">${(l.photos||[]).length} รูป • ${(l.equipment||[]).length} รายการอุปกรณ์</div>
+        </div>
+      </div>
+      <div class="toolbar">
+        <button class="btn btn-ghost btn-sm" onclick="openLocationSheet(${i})">แก้ไข</button>
+        <button class="btn btn-ghost btn-sm" onclick="moveLocation(${i},-1)">↑</button>
+        <button class="btn btn-ghost btn-sm" onclick="moveLocation(${i},1)">↓</button>
+        <button class="btn btn-danger btn-sm right" onclick="deleteLocation(${i})">ลบ</button>
+      </div>
+    </div>`).join('')
+}
+function moveLocation(i,dir){
+  const j=i+dir;if(j<0||j>=current.locations.length)return;
+  [current.locations[i],current.locations[j]]=[current.locations[j],current.locations[i]];
+  renderLocations();scheduleSave()
+}
+function deleteLocation(i){
+  if(!confirm('ลบจุดติดตั้งนี้หรือไม่?'))return;
+  current.locations.splice(i,1);renderLocations();renderSummary();scheduleSave()
+}
+function renderSummary(){
+  if(!current)return;
+  const photos=current.locations.reduce((n,l)=>n+(l.photos||[]).length,0);
+  const equip=current.locations.reduce((n,l)=>n+(l.equipment||[]).length,0);
+  document.getElementById('docSummary').innerHTML=`
+    <b>${esc(current.projectName||'ยังไม่ได้ตั้งชื่อโครงการ')}</b><br>
+    ลูกค้า: ${esc(current.customerName||'-')}<br>
+    PO: ${esc(current.poRef||'-')}<br>
+    จุดติดตั้ง: ${current.locations.length}<br>
+    รูปภาพ: ${photos}<br>
+    รายการอุปกรณ์: ${equip}<br>
+    สถานะ: ${current.status==='completed'?'Completed':'Draft'}`
+}
+function markCompleted(){
+  collectForm();
+  if(!current.projectName||!current.customerName){alert('กรุณากรอกชื่อโครงการและชื่อลูกค้าก่อน');return}
+  current.status='completed';
+  document.getElementById('editorStatus').textContent='Completed';
+  document.getElementById('editorStatus').className='status status-done';
+  renderSummary();scheduleSave()
+}
+
+function setupSignature(canvasId,key){
+  const c=document.getElementById(canvasId), ctx=c.getContext('2d');
+  let drawing=false,last=null;
+  const pos=e=>{
+    const r=c.getBoundingClientRect(), t=e.touches?e.touches[0]:e;
+    return {x:(t.clientX-r.left)*(c.width/r.width), y:(t.clientY-r.top)*(c.height/r.height)}
+  };
+  const start=e=>{drawing=true;last=pos(e);e.preventDefault()};
+  const move=e=>{
+    if(!drawing)return; const p=pos(e); ctx.lineWidth=2.2;ctx.lineCap='round';ctx.strokeStyle='#0b2450';
+    ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();last=p;e.preventDefault()
+  };
+  const end=()=>{if(!drawing)return;drawing=false;if(current){current[key]=c.toDataURL('image/png');scheduleSave()}}
+  c.addEventListener('mousedown',start);c.addEventListener('mousemove',move);window.addEventListener('mouseup',end);
+  c.addEventListener('touchstart',start,{passive:false});c.addEventListener('touchmove',move,{passive:false});c.addEventListener('touchend',end)
+}
+function resizeSignatureCanvas(id){
+  const c=document.getElementById(id), r=c.getBoundingClientRect(), old=c.toDataURL();
+  c.width=Math.max(300,Math.round(r.width*2)); c.height=320;
+}
+function redrawSignature(id,data){
+  const c=document.getElementById(id); if(!c||!data)return;
+  const ctx=c.getContext('2d'), img=new Image();img.onload=()=>ctx.drawImage(img,0,0,c.width,c.height);img.src=data
+}
+function clearSignature(which){
+  const id=which==='sender'?'senderSig':'receiverSig', key=which==='sender'?'senderSignature':'receiverSignature';
+  const c=document.getElementById(id);c.getContext('2d').clearRect(0,0,c.width,c.height);current[key]='';scheduleSave()
+}
+
+async function showPreview(){
+  collectForm(); saveCurrent();
+  try{ if(document.fonts && document.fonts.ready) await document.fonts.ready; }catch(e){}
+  document.getElementById('editorPage').classList.add('hidden');
+  document.getElementById('dashboardPage').classList.add('hidden');
+  document.getElementById('previewPage').classList.remove('hidden');
+  document.getElementById('editorSticky').classList.add('hidden');
+  renderPreview()
+}
+function backToEditor(){showEditor()}
+async function printExactPreview(){
+  try{
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    const imgs=[...document.querySelectorAll('#previewPages img')];
+    await Promise.all(imgs.map(img=>{
+      if(img.complete)return Promise.resolve();
+      return new Promise(resolve=>{
+        img.addEventListener('load',resolve,{once:true});
+        img.addEventListener('error',resolve,{once:true});
+      });
+    }));
+  }catch(e){console.warn(e)}
+  requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()));
+}
+
+function companyFooter(){return 'บริษัท ไทเกอร์ซอฟท์ (1998) จำกัด | เลขที่ 18 อาคารซีทีซี ซอยรามอินทรา 51 บางเขน กทม. 10230'}
+function renderPreview(){
+  const pages=[];
+  pages.push(`
+    <div class="a4 cover-page">
+      <div class="brandline"></div>
+      <div class="cover-logo">
+        <img class="symbol" src="./assets/images/tigersoft-symbol.png" alt="">
+        <img class="wordmark" src="./assets/images/tigersoft-wordmark.png" alt="TIGERSOFT">
+      </div>
+
+      <div class="cover-title">${esc(current.docTitle||'เอกสารส่งมอบงาน')}</div>
+      <div class="cover-project">โครงการ: ${esc(current.projectName||'-')}</div>
+
+      <div class="cover-present-label">นำเสนอ</div>
+      <div class="cover-customer">${esc(coverCustomer())}</div>
+
+      <div class="cover-made-label">จัดทำโดย</div>
+      <div class="cover-company">บริษัท ไทเกอร์ซอฟท์(1998) จำกัด (สำนักงานใหญ่)</div>
+      <div class="cover-date">วันที่ดำเนินการ: ${fmtDateRangeThai(current.startDate,current.endDate)}</div>
+
+      <div class="cover-bottom-red"></div>
+      <div class="cover-bottom-navy"></div>
+    </div>`);
+
+  pages.push(`
+    <div class="a4">
+      <div class="page-head">เอกสารส่งมอบงานติดตั้ง</div>
+      <div class="letter">
+        <div style="text-align:right;font-size:16pt;line-height:1.2;margin:26px 0 32px">วันที่ ${fmtDate(current.docDate)}</div>
+        <div class="letter-row"><b>เรื่อง</b><span>ส่งมอบงาน "${esc(current.projectName||'-')}"</span></div>
+        <div class="letter-row"><b>เรียน</b><span>${esc(current.customerName||'-')} ${esc(current.branchName||'')}</span></div>
+        <div class="letter-row"><b>อ้างถึง</b><span>เอกสารสั่งซื้อเลขที่ ${esc(current.poRef||'-')}</span></div>
+        <div class="indent">${esc(current.workDetail||'')}</div>
+        <div class="indent">บัดนี้ทางบริษัทฯ ได้ดำเนินการติดตั้งและทดสอบระบบเรียบร้อยแล้ว จึงเรียนมาเพื่อโปรดพิจารณาตรวจสอบและลงนามรับมอบงาน</div>
+        <div class="sign-line">
+          <div>ขอแสดงความนับถือ</div>
+          <div class="sigbox">${current.senderSignature?`<img src="${current.senderSignature}">`:''}</div>
+          <div class="name-line"></div>
+          <div class="sign-name">( ${esc(current.senderName||'-')} )</div>
+          <div class="sign-role">ผู้ส่งมอบงาน</div>
+        </div>
+      </div>
+      <div class="footer">${companyFooter()}</div>
+    </div>`);
+
+  current.locations.forEach((loc,idx)=>{
+    const photos=loc.photos||[], eq=loc.equipment||[];
+    const chunks=[];
+    if(!photos.length)chunks.push([]);
+    else for(let i=0;i<photos.length;i+=2)chunks.push(photos.slice(i,i+2));
+    chunks.forEach((phChunk,chunkIndex)=>{
+      const includeTable = chunkIndex===chunks.length-1;
+      pages.push(`
+        <div class="a4">
+          
+          <div class="loc-head"><div class="loc-num">${idx+1}</div><div class="loc-title">${esc(loc.name)}</div></div>
+          <div class="a4-photo-grid">
+            ${phChunk.map(p=>`<div class="a4-photo"><img src="${p.data}"><div class="caption">${esc(p.caption||'')}</div></div>`).join('')}
+          </div>
+          ${includeTable?`
+            <table>
+              <thead><tr><th style="width:6%">ที่</th><th>อุปกรณ์ใหม่</th><th style="width:12%">จำนวน</th><th style="width:27%">Serial Number</th><th style="width:20%">หมายเหตุ</th></tr></thead>
+              <tbody>${eq.length?eq.map((e,i)=>`<tr><td>${i+1}</td><td style="text-align:left">${esc(e.name)}</td><td>${e.qty||1}</td><td>${esc(e.serial||'')}</td><td>${esc(e.remark||'')}</td></tr>`).join(''):`<tr><td colspan="5">ไม่มีรายการอุปกรณ์</td></tr>`}</tbody>
+            </table>`:''}
+          <div class="footer">${companyFooter()}</div>
+        </div>`)
+    })
+  });
+
+  pages.push(`
+    <div class="a4">
+      <div class="accept-title">การลงนามรับมอบงาน</div>
+      <div class="accept-text">
+        ข้าพเจ้า ${esc(current.receiverName||'-')} ในนามของ ${esc(current.customerName||'-')} ${esc(current.branchName||'')}<br>
+        ขอรับรองว่าได้รับการส่งมอบงานติดตั้ง และอุปกรณ์ทั้งหมดตามที่ระบุไว้ในเอกสารฉบับนี้เรียบร้อยแล้ว<br>
+        พร้อมทั้งได้รับการอธิบายวิธีการใช้งานเบื้องต้นเป็นที่เข้าใจอย่างสมบูรณ์
+      </div>
+      <div class="sig-grid">
+        <div><b>ผู้ส่งมอบงาน</b><div class="sig-img">${current.senderSignature?`<img src="${current.senderSignature}">`:''}</div><div class="line"></div><div>(${esc(current.senderName||'-')})</div><div>${esc(current.senderPosition||'')}</div><div style="margin-top:10px">${fmtDate(current.docDate)}</div></div>
+        <div><b>ผู้รับมอบงาน (ลูกค้า)</b><div class="sig-img">${current.receiverSignature?`<img src="${current.receiverSignature}">`:''}</div><div class="line"></div><div>(${esc(current.receiverName||'-')})</div><div>${esc(current.receiverPosition||'')}</div><div style="margin-top:10px">${fmtDate(current.docDate)}</div></div>
+      </div>
+      <div class="footer">${companyFooter()}</div>
+    </div>`);
+
+  document.getElementById('previewPages').innerHTML=pages.join('');
+}
+
+async function exportBackup(){
+  const all=await dbGetAll();
+  const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),documents:all},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='TIGERSOFT_Handover_Backup_'+todayISO()+'.json';a.click();URL.revokeObjectURL(a.href)
+}
+async function importBackup(e){
+  const file=e.target.files[0];if(!file)return;
+  try{
+    const data=JSON.parse(await file.text());
+    if(!Array.isArray(data.documents))throw new Error('รูปแบบไฟล์ไม่ถูกต้อง');
+    for(const d of data.documents)await dbPut(d);
+    docs=await dbGetAll();renderDashboard();alert('นำเข้า Backup เรียบร้อย');
+  }catch(err){alert('นำเข้าไม่สำเร็จ: '+err.message)}
+  e.target.value='';
+}
+init();
+
+
+async function checkBundledFonts(){
+  const el=document.getElementById('fontStatus');
+  try{
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+
+    // Force explicit loads, not just a browser family-name lookup.
+    await Promise.allSettled([
+      document.fonts.load('700 24px "TIGER_FCVISION"'),
+      document.fonts.load('400 24px "TIGER_SARABUN"'),
+      document.fonts.load('400 16px "TIGER_JAKARTA"')
+    ]);
+
+    const fc=document.fonts.check('700 24px "TIGER_FCVISION"');
+    const th=document.fonts.check('400 24px "TIGER_SARABUN"');
+    const ui=document.fonts.check('400 16px "TIGER_JAKARTA"');
+
+    if(el){
+      if(fc && th && ui){
+        el.style.background='#e9f7ed';
+        el.style.color='#16803c';
+        el.style.borderColor='#bfe4c8';
+        el.innerHTML='✓ ฟอนต์พร้อมใช้งาน: FC Vision / TH SarabunPSK / Plus Jakarta Sans';
+      }else{
+        el.style.background='#fff0f0';
+        el.style.color='#b42318';
+        el.style.borderColor='#efc0bd';
+        el.innerHTML=`ฟอนต์ยังโหลดไม่ครบ — FC Vision: ${fc?'✓':'✕'} | TH SarabunPSK: ${th?'✓':'✕'} | Plus Jakarta Sans: ${ui?'✓':'✕'}`;
+      }
+    }
+    console.log('TIGERSOFT font status',{fc,th,ui});
+  }catch(e){
+    if(el){
+      el.style.background='#fff0f0';
+      el.style.color='#b42318';
+      el.innerHTML='ไม่สามารถโหลดฟอนต์ของระบบได้ กรุณาตรวจสอบ assets/fonts/';
+    }
+    console.warn('Font check:',e);
+  }
+}
+window.addEventListener('load', checkBundledFonts);
+
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.warn('Service worker:', err));
+  });
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+TIGERSOFT Handover Builder - Font Assets
+
+นำไฟล์ฟอนต์ที่คุณมีอยู่แล้วมาใส่ในโฟลเดอร์นี้ และตั้งชื่อให้ตรงดังนี้:
+
+1) FC Vision Bold
+   ชื่อไฟล์ที่ระบบต้องการ: FCVision-Bold.otf
+
+2) TH SarabunPSK Regular
+   ชื่อไฟล์ที่ระบบต้องการ: THSarabunPSK.ttf
+
+3) Plus Jakarta Sans Regular
+   ชื่อไฟล์ที่ระบบต้องการ: PlusJakartaSans-Regular.ttf
+
+เมื่อไฟล์ทั้ง 3 อยู่ใน assets/fonts/ แล้ว เว็บจะโหลดฟอนต์อัตโนมัติ
+ไม่ต้องกดเลือกหรือโหลดฟอนต์จากหน้าเว็บอีก
+
+หมายเหตุ:
+- อย่านำฟอนต์ขึ้น Public Repository หากสิทธิ์การใช้งานของฟอนต์ไม่อนุญาตให้เผยแพร่
+- หาก Repository เป็น Public ให้ตรวจสอบ license ของแต่ละฟอนต์ก่อน

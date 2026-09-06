@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TIGERSOFT Font Test</title>
+<style>
+@font-face{font-family:TIGER_FCVISION;src:url("./assets/fonts/FCVision-Bold.otf?v=8") format("opentype");font-weight:400 700;font-display:block}
+@font-face{font-family:TIGER_SARABUN;src:url("./assets/fonts/THSarabunPSK.ttf?v=8") format("truetype");font-weight:400 700;font-display:block}
+@font-face{font-family:TIGER_JAKARTA;src:url("./assets/fonts/PlusJakartaSans-Regular.ttf?v=8") format("truetype");font-weight:400 700;font-display:block}
+body{padding:30px;background:#f4f6f9;color:#172033}
+.box{background:#fff;padding:22px;margin:12px 0;border:1px solid #ddd;border-radius:12px}
+.fc{font-family:TIGER_FCVISION;font-size:34px;font-weight:700}
+.th{font-family:TIGER_SARABUN;font-size:34pt}
+.ui{font-family:TIGER_JAKARTA;font-size:22px}
+.ok{color:#16803c}.bad{color:#b42318}
+</style>
+</head>
+<body>
+<h1>Font Test</h1>
+<div class="box fc">FC Vision — TIGERSOFT เอกสารส่งมอบงาน</div>
+<div class="box th">TH SarabunPSK — เอกสารส่งมอบงานติดตั้ง วันที่ 3 กันยายน 2569</div>
+<div class="box ui">Plus Jakarta Sans — Handover Builder</div>
+<div id="status">Checking...</div>
+<script>
+(async()=>{
+ await document.fonts.ready;
+ await Promise.allSettled([
+  document.fonts.load('700 30px TIGER_FCVISION'),
+  document.fonts.load('400 30px TIGER_SARABUN'),
+  document.fonts.load('400 20px TIGER_JAKARTA')
+ ]);
+ const a=document.fonts.check('700 30px TIGER_FCVISION');
+ const b=document.fonts.check('400 30px TIGER_SARABUN');
+ const c=document.fonts.check('400 20px TIGER_JAKARTA');
+ document.getElementById('status').className=(a&&b&&c)?'ok':'bad';
+ document.getElementById('status').textContent=`FC Vision ${a?'✓':'✕'} | TH SarabunPSK ${b?'✓':'✕'} | Plus Jakarta Sans ${c?'✓':'✕'}`;
+})();
+</script>
+</body>
+</html>
