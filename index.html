@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>TIGERSOFT Handover Builder V9</title>
+<title>TIGERSOFT Handover Builder V10</title>
 <meta name="theme-color" content="#18365d" />
 <link rel="manifest" href="./manifest.webmanifest" />
 <link rel="icon" type="image/png" sizes="192x192" href="./assets/images/icon-192.png" />
@@ -293,6 +293,80 @@
     font-family:"TIGER_FCVISION","TIGER_SARABUN","Tahoma",sans-serif !important;
   }
 
+
+  /* ===== V10 Mobile UX: Location / Equipment editor only ===== */
+  .sheet-header{
+    position:sticky;top:0;z-index:5;background:#fff;
+    padding:2px 0 12px;border-bottom:1px solid var(--line)
+  }
+  .sheet-footer{
+    position:sticky;bottom:0;z-index:5;background:#fff;
+    padding:12px 0 max(2px, env(safe-area-inset-bottom));
+    border-top:1px solid var(--line);margin-top:14px
+  }
+  .equipment-card{
+    border:1px solid var(--line);border-radius:16px;background:#fff;
+    padding:14px;margin-bottom:12px;box-shadow:0 3px 12px rgba(25,42,70,.04)
+  }
+  .equipment-card-head{
+    display:flex;align-items:center;gap:10px;margin-bottom:12px
+  }
+  .equipment-index{
+    width:32px;height:32px;min-width:32px;border-radius:9px;
+    background:#eef2f7;color:var(--navy);display:flex;align-items:center;
+    justify-content:center;font-weight:800
+  }
+  .equipment-name-input{font-weight:700}
+  .serial-wrap{display:flex;gap:8px;align-items:stretch}
+  .serial-wrap .input{flex:1;min-width:0}
+  .scan-btn{
+    min-width:92px;min-height:46px;padding:8px 10px;
+    border:none;border-radius:12px;background:#eef4fb;color:var(--navy);
+    font-weight:800;white-space:nowrap
+  }
+  .qty-wrap{display:grid;grid-template-columns:44px 1fr 44px;gap:6px}
+  .qty-btn{
+    border:none;border-radius:11px;background:#eef2f7;color:var(--navy);
+    font-size:20px;font-weight:800;min-height:46px
+  }
+  .equipment-suggestions{
+    display:flex;gap:7px;overflow-x:auto;padding:2px 0 10px;
+    scrollbar-width:none
+  }
+  .equipment-suggestions::-webkit-scrollbar{display:none}
+  .suggest-chip{
+    border:1px solid #d7dde6;background:#fff;color:#334155;
+    border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700;
+    white-space:nowrap
+  }
+  .scan-status{
+    display:none;margin:8px 0 0;padding:9px 11px;border-radius:10px;
+    background:#eef6ff;border:1px solid #cfe2f7;color:#234d77;font-size:12px
+  }
+  .scan-status.show{display:block}
+  .location-actions{
+    display:grid;grid-template-columns:1fr 1fr;gap:8px
+  }
+  .location-actions .btn{min-height:46px}
+  @media(max-width:759px){
+    .modal{align-items:stretch}
+    .sheet{
+      max-width:none;width:100%;height:100dvh;max-height:100dvh;
+      border-radius:0;margin:0;padding:12px 14px 0;
+      overflow:auto;padding-bottom:calc(86px + env(safe-area-inset-bottom))
+    }
+    .sheet-header{margin:-2px 0 12px;padding-top:max(2px,env(safe-area-inset-top))}
+    .sheet-footer{
+      position:fixed;left:0;right:0;bottom:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+      box-shadow:0 -8px 20px rgba(25,42,70,.08)
+    }
+    .input,.textarea,.select{font-size:16px;min-height:46px}
+    .equipment-card{padding:12px}
+    .row.three{grid-template-columns:1fr}
+    .serial-wrap{display:grid;grid-template-columns:1fr 96px}
+    .photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+
 </style>
 </head>
 <body>
@@ -442,25 +516,41 @@
 
 <div id="locationModal" class="modal hidden">
   <div class="sheet">
-    <div class="toolbar">
-      <h3 id="locSheetTitle">เพิ่มจุดติดตั้ง</h3>
-      <button class="btn btn-ghost btn-sm right" onclick="closeLocationSheet()">ปิด</button>
+    <div class="sheet-header">
+      <div class="toolbar">
+        <h3 id="locSheetTitle" style="margin:0">เพิ่มจุดติดตั้ง</h3>
+        <button class="btn btn-ghost btn-sm right" onclick="closeLocationSheet()">✕ ปิด</button>
+      </div>
     </div>
-    <div class="field"><label class="label">ชื่อพื้นที่</label><input id="locName" class="input" placeholder="เช่น บริเวณทางเข้าหน้าโรงงาน"></div>
+
+    <div class="field">
+      <label class="label">ชื่อพื้นที่</label>
+      <input id="locName" class="input" placeholder="เช่น บริเวณทางเข้าหน้าโรงงาน">
+    </div>
+
     <div class="field">
       <label class="label">รูปภาพ</label>
-      <div class="toolbar">
-        <label class="btn btn-primary btn-sm">📷 ถ่ายรูป<input id="cameraInput" type="file" accept="image/*" capture="environment" hidden multiple></label>
-        <label class="btn btn-ghost btn-sm">🖼 เลือกรูป<input id="galleryInput" type="file" accept="image/*" hidden multiple></label>
+      <div class="location-actions">
+        <label class="btn btn-primary">📷 ถ่ายรูป<input id="cameraInput" type="file" accept="image/*" capture="environment" hidden multiple></label>
+        <label class="btn btn-ghost">🖼 เลือกรูป<input id="galleryInput" type="file" accept="image/*" hidden multiple></label>
       </div>
       <div id="modalPhotoGrid" class="photo-grid" style="margin-top:10px"></div>
     </div>
+
     <div class="divider"></div>
-    <h3>อุปกรณ์</h3>
+    <div class="toolbar" style="margin-bottom:8px">
+      <h3 style="margin:0">อุปกรณ์</h3>
+      <button class="btn btn-ghost btn-sm right" onclick="addEquipmentRow()">＋ เพิ่มอุปกรณ์</button>
+    </div>
+    <div class="muted" style="font-size:12px;margin-bottom:8px">รายการมาตรฐานจะถูกใส่อัตโนมัติเมื่อสร้างจุดติดตั้งใหม่ และสามารถแก้ไข/ลบ/เพิ่มได้ตามเดิม</div>
     <div id="modalEquipment"></div>
-    <button class="btn btn-ghost btn-sm" onclick="addEquipmentRow()">＋ เพิ่มอุปกรณ์</button>
-    <div class="divider"></div>
-    <button class="btn btn-accent" style="width:100%" onclick="saveLocationFromSheet()">บันทึกจุดติดตั้ง</button>
+
+    <input id="serialScanInput" type="file" accept="image/*" capture="environment" hidden>
+    <div id="serialScanStatus" class="scan-status"></div>
+
+    <div class="sheet-footer">
+      <button class="btn btn-accent" style="width:100%;min-height:50px" onclick="saveLocationFromSheet()">บันทึกจุดติดตั้ง</button>
+    </div>
   </div>
 </div>
 
@@ -471,6 +561,29 @@ let db=null, docs=[], current=null, currentFilter='all';
 let editLocationIndex=null;
 let modalPhotos=[];
 let modalEquipment=[];
+
+const DEFAULT_EQUIPMENT_NAMES = [
+  'เครื่องบันทึกเวลา',
+  'Power supply',
+  'Battery',
+  'Magnetic lock',
+  'Notouch Exit',
+  'Emergency break glass',
+  'Key Switch',
+  'Access Control Kit',
+  'ฐานอคิลิค'
+];
+
+function createDefaultEquipment(){
+  return DEFAULT_EQUIPMENT_NAMES.map(name=>({
+    name,
+    qty:1,
+    serial:'',
+    remark:'ติดตั้งสมบูรณ์'
+  }));
+}
+let serialScanIndex = null;
+
 
 function uid(){return 'd_'+Date.now()+'_'+Math.random().toString(36).slice(2,8)}
 function todayISO(){return new Date().toISOString().slice(0,10)}
@@ -535,6 +648,7 @@ async function init(){
   document.getElementById('backupInput').addEventListener('change',importBackup);
   document.getElementById('cameraInput').addEventListener('change',e=>handlePhotos(e.target.files));
   document.getElementById('galleryInput').addEventListener('change',e=>handlePhotos(e.target.files));
+  document.getElementById('serialScanInput').addEventListener('change',handleSerialScanFile);
   bindAutosave();
   setupSignature('senderSig','senderSignature');
   setupSignature('receiverSig','receiverSignature');
@@ -651,7 +765,7 @@ function generateWorkDetail(){
 function openLocationSheet(index=null){
   editLocationIndex=index;
   if(index===null){
-    modalPhotos=[]; modalEquipment=[]; document.getElementById('locName').value='';
+    modalPhotos=[]; modalEquipment=createDefaultEquipment(); document.getElementById('locName').value='';
     document.getElementById('locSheetTitle').textContent='เพิ่มจุดติดตั้ง';
   }else{
     const l=current.locations[index];
@@ -707,21 +821,186 @@ function movePhoto(i,dir){
   const j=i+dir;if(j<0||j>=modalPhotos.length)return;
   [modalPhotos[i],modalPhotos[j]]=[modalPhotos[j],modalPhotos[i]];renderModalPhotos()
 }
-function addEquipmentRow(){modalEquipment.push({name:'',qty:1,serial:'',remark:'ติดตั้งสมบูรณ์'});renderModalEquipment()}
+function addEquipmentRow(name=''){
+  modalEquipment.push({name,qty:1,serial:'',remark:'ติดตั้งสมบูรณ์'});
+  renderModalEquipment();
+  setTimeout(()=>{
+    const inputs=document.querySelectorAll('.equipment-name-input');
+    if(inputs.length)inputs[inputs.length-1].focus();
+  },30);
+}
+function changeQty(i,delta){
+  modalEquipment[i].qty=Math.max(1,Number(modalEquipment[i].qty||1)+delta);
+  renderModalEquipment();
+}
 function renderModalEquipment(){
   const el=document.getElementById('modalEquipment');
-  if(!modalEquipment.length){el.innerHTML='<div class="empty" style="margin-bottom:10px">ยังไม่มีอุปกรณ์</div>';return}
+  if(!modalEquipment.length){
+    el.innerHTML='<div class="empty" style="margin-bottom:10px">ยังไม่มีอุปกรณ์<br><button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="addEquipmentRow()">＋ เพิ่มอุปกรณ์</button></div>';
+    return;
+  }
   el.innerHTML=modalEquipment.map((e,i)=>`
-    <div class="equipment-item">
-      <div class="field"><label class="label">ชื่ออุปกรณ์</label><input class="input" value="${esc(e.name||'')}" oninput="modalEquipment[${i}].name=this.value"></div>
-      <div class="row three">
-        <div class="field"><label class="label">จำนวน</label><input type="number" min="1" class="input" value="${e.qty||1}" oninput="modalEquipment[${i}].qty=Number(this.value||1)"></div>
-        <div class="field"><label class="label">Serial Number</label><input class="input" value="${esc(e.serial||'')}" oninput="modalEquipment[${i}].serial=this.value"></div>
-        <div class="field"><label class="label">หมายเหตุ</label><input class="input" value="${esc(e.remark||'')}" oninput="modalEquipment[${i}].remark=this.value"></div>
+    <div class="equipment-card">
+      <div class="equipment-card-head">
+        <div class="equipment-index">${i+1}</div>
+        <div style="flex:1;min-width:0">
+          <label class="label">ชื่ออุปกรณ์</label>
+          <input class="input equipment-name-input" list="equipmentDefaults" value="${esc(e.name||'')}" oninput="modalEquipment[${i}].name=this.value">
+        </div>
+        <button class="btn btn-danger btn-sm" style="align-self:flex-end;min-height:46px" onclick="modalEquipment.splice(${i},1);renderModalEquipment()">ลบ</button>
       </div>
-      <button class="btn btn-danger btn-sm" onclick="modalEquipment.splice(${i},1);renderModalEquipment()">ลบอุปกรณ์</button>
-    </div>`).join('');
+
+      <div class="row three">
+        <div class="field">
+          <label class="label">จำนวน</label>
+          <div class="qty-wrap">
+            <button type="button" class="qty-btn" onclick="changeQty(${i},-1)">−</button>
+            <input type="number" min="1" class="input" style="text-align:center" value="${e.qty||1}" oninput="modalEquipment[${i}].qty=Math.max(1,Number(this.value||1))">
+            <button type="button" class="qty-btn" onclick="changeQty(${i},1)">＋</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Serial Number</label>
+          <div class="serial-wrap">
+            <input class="input" id="serial_${i}" value="${esc(e.serial||'')}" placeholder="กรอกหรือสแกน Serial" oninput="modalEquipment[${i}].serial=this.value">
+            <button type="button" class="scan-btn" onclick="startSerialScan(${i})">📷 สแกน</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">หมายเหตุ</label>
+          <input class="input" value="${esc(e.remark||'')}" oninput="modalEquipment[${i}].remark=this.value">
+        </div>
+      </div>
+    </div>`).join('') + `
+      <datalist id="equipmentDefaults">
+        ${DEFAULT_EQUIPMENT_NAMES.map(n=>`<option value="${esc(n)}"></option>`).join('')}
+      </datalist>`;
 }
+
+function setScanStatus(message,type='info'){
+  const el=document.getElementById('serialScanStatus');
+  if(!el)return;
+  el.textContent=message;
+  el.classList.add('show');
+  if(type==='error'){
+    el.style.background='#fff0f0';el.style.borderColor='#efc0bd';el.style.color='#b42318';
+  }else if(type==='success'){
+    el.style.background='#e9f7ed';el.style.borderColor='#bfe4c8';el.style.color='#16803c';
+  }else{
+    el.style.background='#eef6ff';el.style.borderColor='#cfe2f7';el.style.color='#234d77';
+  }
+}
+function hideScanStatus(){
+  const el=document.getElementById('serialScanStatus');
+  if(el)el.classList.remove('show');
+}
+function startSerialScan(i){
+  serialScanIndex=i;
+  hideScanStatus();
+  const input=document.getElementById('serialScanInput');
+  input.value='';
+  input.click();
+}
+async function handleSerialScanFile(e){
+  const file=e.target.files && e.target.files[0];
+  const index=serialScanIndex;
+  if(!file || index===null || !modalEquipment[index])return;
+
+  setScanStatus('กำลังอ่าน Serial Number จากภาพ...');
+  let detected='';
+
+  // 1) Barcode / QR - fast and local on supported browsers
+  try{
+    if('BarcodeDetector' in window){
+      const bitmap=await createImageBitmap(file);
+      const formats=await BarcodeDetector.getSupportedFormats().catch(()=>[]);
+      const detector=new BarcodeDetector(formats.length?{formats}:undefined);
+      const results=await detector.detect(bitmap);
+      bitmap.close && bitmap.close();
+      if(results && results.length){
+        detected=(results[0].rawValue||'').trim();
+      }
+    }
+  }catch(err){
+    console.warn('Barcode scan:',err);
+  }
+
+  // 2) Browser native text detector, if available
+  if(!detected){
+    try{
+      if('TextDetector' in window){
+        const bitmap=await createImageBitmap(file);
+        const results=await new TextDetector().detect(bitmap);
+        bitmap.close && bitmap.close();
+        if(results && results.length){
+          detected=extractSerialCandidate(results.map(x=>x.rawValue||'').join('\n'));
+        }
+      }
+    }catch(err){
+      console.warn('Native text scan:',err);
+    }
+  }
+
+  // 3) OCR fallback (runs in browser; image itself is not uploaded)
+  if(!detected){
+    try{
+      setScanStatus('ไม่พบบาร์โค้ด กำลังอ่านข้อความบนป้าย...');
+      await ensureTesseract();
+      const result=await Tesseract.recognize(file,'eng',{
+        logger:m=>{
+          if(m.status==='recognizing text' && typeof m.progress==='number'){
+            setScanStatus(`กำลังอ่านข้อความ ${Math.round(m.progress*100)}%`);
+          }
+        }
+      });
+      detected=extractSerialCandidate(result?.data?.text||'');
+    }catch(err){
+      console.warn('OCR:',err);
+    }
+  }
+
+  if(detected){
+    modalEquipment[index].serial=detected;
+    renderModalEquipment();
+    setScanStatus(`อ่าน Serial ได้: ${detected}`,'success');
+    setTimeout(hideScanStatus,3500);
+  }else{
+    setScanStatus('อ่าน Serial ไม่สำเร็จ กรุณาถ่ายให้ป้ายชัดขึ้น หรือกรอกด้วยตนเอง','error');
+  }
+  e.target.value='';
+}
+function extractSerialCandidate(text=''){
+  const cleaned=String(text).replace(/[|]/g,'I').replace(/\s+/g,' ').trim();
+  if(!cleaned)return '';
+
+  // Prefer alphanumeric serial-like tokens that contain at least one digit.
+  const tokens=cleaned.match(/[A-Za-z0-9][A-Za-z0-9._\-\/]{3,}/g)||[];
+  const ranked=tokens
+    .filter(t=>/\d/.test(t))
+    .sort((a,b)=>{
+      const score=x=>(/[A-Za-z]/.test(x)?5:0)+(/\d/.test(x)?5:0)+Math.min(x.length,24);
+      return score(b)-score(a);
+    });
+  if(ranked.length)return ranked[0].replace(/[.,;:]+$/,'');
+  return cleaned.split(' ')[0].slice(0,64);
+}
+let tesseractLoading=null;
+function ensureTesseract(){
+  if(window.Tesseract)return Promise.resolve();
+  if(tesseractLoading)return tesseractLoading;
+  tesseractLoading=new Promise((resolve,reject)=>{
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+    s.async=true;
+    s.onload=()=>resolve();
+    s.onerror=()=>reject(new Error('โหลด OCR engine ไม่สำเร็จ'));
+    document.head.appendChild(s);
+  });
+  return tesseractLoading;
+}
+
 function saveLocationFromSheet(){
   const name=document.getElementById('locName').value.trim()||'จุดติดตั้ง';
   const loc={name,photos:structuredClone(modalPhotos),equipment:structuredClone(modalEquipment)};
