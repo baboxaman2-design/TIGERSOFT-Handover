@@ -146,8 +146,11 @@
     font-size:16pt;line-height:1.45;font-weight:400;
     -webkit-print-color-adjust:exact;print-color-adjust:exact
   }
- 
+  .a4 .brandline{position:absolute;left:0;right:0;top:0;height:40px;background:var(--navy)}
+  .a4 .brandline:after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:8px;background:var(--red)}
   .a4.cover-page{padding:0;overflow:hidden;font-family:"TIGER_FCVISION","TIGER_SARABUN","Tahoma",sans-serif}
+  .a4 .cover-bottom-red{position:absolute;left:0;right:0;bottom:39px;height:10px;background:var(--red)}
+  .a4 .cover-bottom-navy{position:absolute;left:0;right:0;bottom:0;height:39px;background:var(--navy)}
   .a4 .cover-logo{position:absolute;top:118px;left:0;right:0;margin:0;text-align:center}
   .a4 .cover-logo .symbol{display:block;width:50px;height:auto;margin:0 auto 7px}
   .a4 .cover-logo .wordmark{display:block;width:166px;height:auto;margin:0 auto}
@@ -468,7 +471,7 @@
             <div class="field"><label class="label">ชื่อเอกสาร</label><input id="docTitle" class="input" value="เอกสารส่งมอบงาน"></div>
             <div class="field"><label class="label">ชื่อโครงการ *</label><input id="projectName" class="input" placeholder="เช่น ติดตั้ง Swing Barrier SBTL700 Series"></div>
             <div class="row two">
-              <div class="field"><label class="label">ลูกค้า *</label><input id="customerName" class="input"></div>
+              <div class="field"><label class="label">ลูกค้า/ชื่อบริษัท *</label><input id="customerName" class="input"></div>
               <div class="field"><label class="label">สาขา</label><input id="branchName" class="input"></div>
             </div>
             <div class="row two">
