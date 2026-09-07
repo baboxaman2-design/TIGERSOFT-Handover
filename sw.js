@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tigersoft-handover-v10';
+const CACHE_NAME = 'tigersoft-handover-v13';
 const CORE = [
   './',
   './index.html',

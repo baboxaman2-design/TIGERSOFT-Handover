@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>TIGERSOFT Handover Builder V10</title>
+<title>TIGERSOFT Handover Builder V13</title>
 <meta name="theme-color" content="#18365d" />
 <link rel="manifest" href="./manifest.webmanifest" />
 <link rel="icon" type="image/png" sizes="192x192" href="./assets/images/icon-192.png" />
@@ -146,11 +146,8 @@
     font-size:16pt;line-height:1.45;font-weight:400;
     -webkit-print-color-adjust:exact;print-color-adjust:exact
   }
-  .a4 .brandline{position:absolute;left:0;right:0;top:0;height:40px;background:var(--navy)}
-  .a4 .brandline:after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:8px;background:var(--red)}
+ 
   .a4.cover-page{padding:0;overflow:hidden;font-family:"TIGER_FCVISION","TIGER_SARABUN","Tahoma",sans-serif}
-  .a4 .cover-bottom-red{position:absolute;left:0;right:0;bottom:39px;height:10px;background:var(--red)}
-  .a4 .cover-bottom-navy{position:absolute;left:0;right:0;bottom:0;height:39px;background:var(--navy)}
   .a4 .cover-logo{position:absolute;top:118px;left:0;right:0;margin:0;text-align:center}
   .a4 .cover-logo .symbol{display:block;width:50px;height:auto;margin:0 auto 7px}
   .a4 .cover-logo .wordmark{display:block;width:166px;height:auto;margin:0 auto}
@@ -205,20 +202,53 @@
     font-family:"TIGER_SARABUN","Tahoma",sans-serif;
     font-size:20pt;line-height:1;font-weight:700
   }
-  .a4 .a4-photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:40px}
-  .a4 .a4-photo{border:1px solid #d3d3d3;padding:9px;background:#fff;box-shadow:0 2px 7px rgba(0,0,0,.10)}
-  .a4 .a4-photo img{width:100%;height:310px;object-fit:cover;display:block}
+  .a4 .a4-photo-grid{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px 16px;margin-top:18px;align-items:start
+  }
+  .a4 .a4-photo-grid.count-1{grid-template-columns:1fr;max-width:350px;margin-left:auto;margin-right:auto}
+  .a4 .a4-photo-grid.count-2{grid-template-columns:1fr 1fr}
+  .a4 .a4-photo-grid.count-3{grid-template-columns:1fr 1fr}
+  .a4 .a4-photo-grid.count-3 .a4-photo:nth-child(3){
+    grid-column:1 / span 2;max-width:235px;width:100%;justify-self:center
+  }
+  .a4 .a4-photo-grid.count-4{grid-template-columns:1fr 1fr}
+  .a4 .a4-photo-grid.count-5,
+  .a4 .a4-photo-grid.count-6{grid-template-columns:1fr 1fr}
+  .a4 .a4-photo-grid.count-5 .a4-photo:nth-child(5){
+    grid-column:1 / span 2;max-width:235px;width:100%;justify-self:center
+  }
+  .a4 .a4-photo{
+    border:1px solid #d3d3d3;padding:6px;background:#fff;
+    box-shadow:0 2px 7px rgba(0,0,0,.10);
+    display:flex;flex-direction:column;justify-content:flex-start
+  }
+  .a4 .a4-photo img{
+    width:100%;object-fit:contain;display:block;background:#fff
+  }
+  /* 1-4 รูป: เหลือพื้นที่ไว้สำหรับตารางอุปกรณ์ */
+  .a4 .a4-photo-grid.count-1 .a4-photo img{height:345px}
+  .a4 .a4-photo-grid.count-2 .a4-photo img{height:295px}
+  .a4 .a4-photo-grid.count-3 .a4-photo img{height:178px}
+  .a4 .a4-photo-grid.count-4 .a4-photo img{height:168px}
+  /* 5-6 รูป: ใช้พื้นที่หน้าเป็นภาพเต็มขึ้น และย้ายตารางไปหน้าถัดไป */
+  .a4 .a4-photo-grid.count-5 .a4-photo img,
+  .a4 .a4-photo-grid.count-6 .a4-photo img{height:225px}
   .a4 .caption{
     text-align:center;font-family:"TIGER_SARABUN","Tahoma",sans-serif;
-    font-size:14pt;line-height:1.15;margin-top:5px;color:#333
+    font-size:11.5pt;line-height:1.05;margin-top:3px;color:#333;min-height:13px
   }
   .a4 table{
-    border-collapse:collapse;width:100%;margin-top:31px;
+    border-collapse:collapse;width:100%;margin-top:18px;
     font-family:"TIGER_SARABUN","Tahoma",sans-serif;
-    font-size:14pt;line-height:1.05
+    font-size:12.5pt;line-height:1.0
   }
-  .a4 th,.a4 td{border:1px solid #444;padding:4px 7px;text-align:center;vertical-align:middle}
+  .a4 th,.a4 td{border:1px solid #444;padding:3px 5px;text-align:center;vertical-align:middle}
   .a4 th{background:#050505;color:#fff;font-weight:400;font-size:14pt}
+  .a4 .equipment-only-title{
+    margin-top:22px;font-size:20pt;font-weight:700;
+    font-family:"TIGER_SARABUN","Tahoma",sans-serif
+  }
   .a4 .accept-text{
     font-family:"TIGER_SARABUN","Tahoma",sans-serif;
     font-size:16pt;line-height:1.52;text-align:center;margin-top:72px
@@ -366,6 +396,18 @@
     .serial-wrap{display:grid;grid-template-columns:1fr 96px}
     .photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   }
+
+
+  .default-toggle-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f7f9fc;border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+  .switch{position:relative;display:inline-block;width:48px;height:28px;flex:0 0 auto}
+  .switch input{opacity:0;width:0;height:0}
+  .slider{position:absolute;cursor:pointer;inset:0;background:#cbd5e1;transition:.2s;border-radius:999px}
+  .slider:before{content:"";position:absolute;height:22px;width:22px;left:3px;top:3px;background:#fff;transition:.2s;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+  .switch input:checked + .slider{background:var(--navy)}
+  .switch input:checked + .slider:before{transform:translateX(20px)}
+  .default-toggle-text{flex:1;min-width:0}
+  .default-toggle-text b{display:block;font-size:13px}
+  .default-toggle-text small{display:block;color:var(--muted);margin-top:2px;line-height:1.35}
 
 </style>
 </head>
@@ -542,7 +584,13 @@
       <h3 style="margin:0">อุปกรณ์</h3>
       <button class="btn btn-ghost btn-sm right" onclick="addEquipmentRow()">＋ เพิ่มอุปกรณ์</button>
     </div>
-    <div class="muted" style="font-size:12px;margin-bottom:8px">รายการมาตรฐานจะถูกใส่อัตโนมัติเมื่อสร้างจุดติดตั้งใหม่ และสามารถแก้ไข/ลบ/เพิ่มได้ตามเดิม</div>
+    <div class="default-toggle-row">
+      <label class="switch"><input id="defaultEquipmentToggle" type="checkbox" onchange="toggleDefaultEquipment(this.checked)"><span class="slider"></span></label>
+      <div class="default-toggle-text">
+        <b>รายการอุปกรณ์ Default 9 รายการ</b>
+        <small id="defaultEquipmentHint">เปิด: ใส่ 9 รายการอัตโนมัติ / ปิด: เริ่มจากรายการว่าง 1 รายการ</small>
+      </div>
+    </div>
     <div id="modalEquipment"></div>
 
     <input id="serialScanInput" type="file" accept="image/*" capture="environment" hidden>
@@ -575,12 +623,17 @@ const DEFAULT_EQUIPMENT_NAMES = [
 ];
 
 function createDefaultEquipment(){
-  return DEFAULT_EQUIPMENT_NAMES.map(name=>({
-    name,
-    qty:1,
-    serial:'',
-    remark:'ติดตั้งสมบูรณ์'
-  }));
+  return DEFAULT_EQUIPMENT_NAMES.map(name=>({name,qty:1,serial:'',remark:'ติดตั้งสมบูรณ์'}));
+}
+function createBlankEquipment(){
+  return [{name:'',qty:1,serial:'',remark:'ติดตั้งสมบูรณ์'}];
+}
+function getDefaultEquipmentEnabled(){
+  const v=localStorage.getItem('tiger_default_equipment_enabled');
+  return v===null ? true : v==='true';
+}
+function setDefaultEquipmentEnabled(v){
+  localStorage.setItem('tiger_default_equipment_enabled',v?'true':'false');
 }
 let serialScanIndex = null;
 
@@ -765,7 +818,8 @@ function generateWorkDetail(){
 function openLocationSheet(index=null){
   editLocationIndex=index;
   if(index===null){
-    modalPhotos=[]; modalEquipment=createDefaultEquipment(); document.getElementById('locName').value='';
+    const useDefaults=getDefaultEquipmentEnabled();
+    modalPhotos=[]; modalEquipment=useDefaults?createDefaultEquipment():createBlankEquipment(); document.getElementById('locName').value='';
     document.getElementById('locSheetTitle').textContent='เพิ่มจุดติดตั้ง';
   }else{
     const l=current.locations[index];
@@ -774,6 +828,8 @@ function openLocationSheet(index=null){
     modalEquipment=structuredClone(l.equipment||[]);
     document.getElementById('locSheetTitle').textContent='แก้ไขจุดติดตั้ง';
   }
+  const toggle=document.getElementById('defaultEquipmentToggle');
+  if(toggle)toggle.checked=getDefaultEquipmentEnabled();
   renderModalPhotos(); renderModalEquipment();
   document.getElementById('locationModal').classList.remove('hidden')
 }
@@ -821,6 +877,30 @@ function movePhoto(i,dir){
   const j=i+dir;if(j<0||j>=modalPhotos.length)return;
   [modalPhotos[i],modalPhotos[j]]=[modalPhotos[j],modalPhotos[i]];renderModalPhotos()
 }
+
+function toggleDefaultEquipment(enabled){
+  setDefaultEquipmentEnabled(enabled);
+  if(editLocationIndex!==null){
+    const hint=document.getElementById('defaultEquipmentHint');
+    if(hint)hint.textContent=enabled?'เปิดสำหรับจุดติดตั้งใหม่ครั้งถัดไป':'ปิดสำหรับจุดติดตั้งใหม่ครั้งถัดไป';
+    return;
+  }
+  const hasTyped=modalEquipment.some(e=>(e.serial||'').trim() || ((e.name||'').trim() && !DEFAULT_EQUIPMENT_NAMES.includes((e.name||'').trim())));
+  if(hasTyped){
+    const ok=confirm(enabled?'เปลี่ยนเป็น Default 9 รายการ? ข้อมูลที่กรอกอยู่จะถูกแทนที่':'ปิด Default? ข้อมูลที่กรอกอยู่จะถูกแทนที่ด้วยรายการว่าง 1 รายการ');
+    if(!ok){
+      const t=document.getElementById('defaultEquipmentToggle');
+      if(t)t.checked=!enabled;
+      setDefaultEquipmentEnabled(!enabled);
+      return;
+    }
+  }
+  modalEquipment=enabled?createDefaultEquipment():createBlankEquipment();
+  renderModalEquipment();
+  const hint=document.getElementById('defaultEquipmentHint');
+  if(hint)hint.textContent=enabled?'เปิด: ใส่ 9 รายการอัตโนมัติ และยังลบ/เพิ่ม/แก้ไขได้':'ปิด: เริ่มจากรายการว่าง 1 รายการ และใส่เองทั้งหมด';
+}
+
 function addEquipmentRow(name=''){
   modalEquipment.push({name,qty:1,serial:'',remark:'ติดตั้งสมบูรณ์'});
   renderModalEquipment();
@@ -1113,6 +1193,21 @@ async function printExactPreview(){
 }
 
 function companyFooter(){return 'บริษัท ไทเกอร์ซอฟท์ (1998) จำกัด | เลขที่ 18 อาคารซีทีซี ซอยรามอินทรา 51 บางเขน กทม. 10230'}
+
+function equipmentFitsWithPhotos(photoCount,equipmentCount){
+  // กติกา V13:
+  // 0-4 รูป = ตารางอุปกรณ์อยู่หน้าเดียวกัน
+  // 5-6 รูป = ตารางอุปกรณ์ไปหน้าถัดไป
+  return photoCount <= 4;
+}
+function renderEquipmentTable(eq){
+  return `
+    <table>
+      <thead><tr><th style="width:6%">ที่</th><th>อุปกรณ์ใหม่</th><th style="width:12%">จำนวน</th><th style="width:27%">Serial Number</th><th style="width:20%">หมายเหตุ</th></tr></thead>
+      <tbody>${eq.length?eq.map((e,i)=>`<tr><td>${i+1}</td><td style="text-align:left">${esc(e.name)}</td><td>${e.qty||1}</td><td>${esc(e.serial||'')}</td><td>${esc(e.remark||'')}</td></tr>`).join(''):`<tr><td colspan="5">ไม่มีรายการอุปกรณ์</td></tr>`}</tbody>
+    </table>`;
+}
+
 function renderPreview(){
   const pages=[];
   pages.push(`
@@ -1161,25 +1256,43 @@ function renderPreview(){
   current.locations.forEach((loc,idx)=>{
     const photos=loc.photos||[], eq=loc.equipment||[];
     const chunks=[];
-    if(!photos.length)chunks.push([]);
-    else for(let i=0;i<photos.length;i+=2)chunks.push(photos.slice(i,i+2));
+
+    if(!photos.length){
+      chunks.push([]);
+    }else{
+      // V13: สูงสุด 6 รูปต่อหน้า
+      for(let i=0;i<photos.length;i+=6){
+        chunks.push(photos.slice(i,i+6));
+      }
+    }
+
+    // ตารางอยู่กับรูปได้เฉพาะเมื่อทั้ง Location มี 0-4 รูป
+    // ถ้ามี 5 รูปขึ้นไป ให้แสดงภาพก่อน แล้วตารางเป็นหน้าถัดไป
+    const tableOnPhotoPage = photos.length <= 4;
+
     chunks.forEach((phChunk,chunkIndex)=>{
-      const includeTable = chunkIndex===chunks.length-1;
+      const includeTable = chunkIndex===0 && tableOnPhotoPage;
       pages.push(`
         <div class="a4">
-          
           <div class="loc-head"><div class="loc-num">${idx+1}</div><div class="loc-title">${esc(loc.name)}</div></div>
-          <div class="a4-photo-grid">
-            ${phChunk.map(p=>`<div class="a4-photo"><img src="${p.data}"><div class="caption">${esc(p.caption||'')}</div></div>`).join('')}
-          </div>
-          ${includeTable?`
-            <table>
-              <thead><tr><th style="width:6%">ที่</th><th>อุปกรณ์ใหม่</th><th style="width:12%">จำนวน</th><th style="width:27%">Serial Number</th><th style="width:20%">หมายเหตุ</th></tr></thead>
-              <tbody>${eq.length?eq.map((e,i)=>`<tr><td>${i+1}</td><td style="text-align:left">${esc(e.name)}</td><td>${e.qty||1}</td><td>${esc(e.serial||'')}</td><td>${esc(e.remark||'')}</td></tr>`).join(''):`<tr><td colspan="5">ไม่มีรายการอุปกรณ์</td></tr>`}</tbody>
-            </table>`:''}
+          ${phChunk.length ? `
+            <div class="a4-photo-grid count-${phChunk.length}">
+              ${phChunk.map(p=>`<div class="a4-photo"><img src="${p.data}"><div class="caption">${esc(p.caption||'')}</div></div>`).join('')}
+            </div>` : ''}
+          ${includeTable?renderEquipmentTable(eq):''}
           <div class="footer">${companyFooter()}</div>
         </div>`)
-    })
+    });
+
+    if(!tableOnPhotoPage){
+      pages.push(`
+        <div class="a4">
+          <div class="loc-head"><div class="loc-num">${idx+1}</div><div class="loc-title">${esc(loc.name)}</div></div>
+          <div class="equipment-only-title">รายละเอียดอุปกรณ์</div>
+          ${renderEquipmentTable(eq)}
+          <div class="footer">${companyFooter()}</div>
+        </div>`)
+    }
   });
 
   pages.push(`
